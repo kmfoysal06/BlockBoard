@@ -1,0 +1,180 @@
+body {
+    background: #fff;
+    min-height: 100vh;
+}
+
+main {
+    margin-top: 80px;
+}
+
+nav.navbar {
+    background: #343a40;
+}
+
+#content {
+    display: none;
+}
+
+.connect-to-blockchain-wrapper {
+    text-align: center;
+    display: flex;
+    height: 100dvh;
+    justify-content: center;
+    align-items: center;
+}
+
+#connectButton {
+    padding: 15px 40px;
+    font-size: 18px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#connectButton:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.todo-list-contents-wrapper {
+    width: 100%;
+    max-width: 600px;
+    display: none;
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+.card-header {
+    background: #667eea;
+    color: white;
+    font-size: 20px;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 8px 20px;
+    border: none;
+}
+
+.card-body {
+    padding: 30px;
+    background: white;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+#newTask {
+    border-radius: 10px;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+#newTask:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-submit {
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 600;
+    margin-top: 10px;
+    width: 100%;
+    background: #667eea;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.list-group-item {
+    border: none;
+    border-radius: 10px !important;
+    margin-bottom: 10px;
+    padding: 15px 20px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.list-group-item:hover {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.task-actions {
+    display: block;
+    width: 200px;
+    text-align: end;
+}
+
+.list-group-item label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+}
+
+.list-group-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.list-group-item .content {
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+#completedTaskList .list-group-item {
+    background: #e9ecef;
+}
+
+#completedTaskList .content {
+    color: #6c757d;
+    text-decoration: line-through;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #495057;
+    margin: 25px 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+#loader {
+    padding: 40px;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+#account {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-family: monospace;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+.taskTemplate {
+    display: none;
+}

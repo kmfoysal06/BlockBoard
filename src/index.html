@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Webermelon BlockChain Task Management</title>
+
+	<!-- Bootstrap -->
+	<link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+	<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+		<a class="navbar-brand col-sm-3 col-md-2 mr-0 px-4" href="http://www.dappuniversity.com/free-download"
+			target="_blank">
+			Webermelon BlockChain Task Management
+		</a>
+		<ul class="navbar-nav px-3">
+			<li class="nav-item text-nowrap d-none d-sm-block">
+				<small class="nav-link"><span id="account" class="badge badge-light"></span></small>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container-fluid mt-5">
+		<div class="row">
+			<main role="main" class="col-lg-12 d-flex flex-column align-items-center">
+				<div class="connect-to-blockchain-wrapper">
+					<button id="connectButton" class="btn btn-primary btn-lg">
+						<i class="fas fa-plug"></i> Connect to Blockchain
+					</button>
+				</div>
+
+				<div class="todo-list-contents-wrapper mt-5">
+					<div id="loader" class="text-center">
+						<div class="spinner-border text-primary" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<p class="mt-3 text-white">Loading your tasks...</p>
+					</div>
+
+					<div id="content">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="mb-0"><i class="fas fa-tasks"></i> Task Management</h3>
+							</div>
+							<div class="card-body">
+								<form>
+									<div class="form-group">
+										<input id="newTask" type="text" class="form-control form-control-lg"
+											placeholder="What needs to be done?" required>
+									</div>
+									<button type="submit" class="btn btn-primary btn-submit">
+										Add Task
+									</button>
+								</form>
+
+								<div class="section-title">
+									Active Tasks
+								</div>
+								<ul id="taskList" class="list-group">
+
+								</ul>
+
+								<div class="section-title">Completed Tasks</div>
+								<ul id="completedTaskList" class="list-group">
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<!-- bootstrap modal -->
+	<div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editLabel">Edit Task</h5>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="editTaskInput">Task Content</label>
+						<input type="text" class="form-control" id="editTaskInput" placeholder="Enter new task content">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="editTaskSaveBtn" class="btn btn-primary editTaskSaveBtn">Save</button>
+					<button type="button" id="editTaskModalCloseBtn" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- Font Awesome for icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+	<script src="vendor/web3/dist/web3.min.js"></script>
+	<script src="ca.js"></script>
+	<script src="app.js"></script>
+</body>
+
+</html>
