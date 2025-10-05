@@ -1,1 +1,321 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Webermelon BlockChain Task Management</title><script src="https://cdn.tailwindcss.com"></script><link href="style.css" rel="stylesheet"><link href="./assets/css/main.3adc1e5f.css" rel="stylesheet"></head><body><nav class="bg-gray-900 text-white px-6 py-4"><div class="max-w-7xl mx-auto flex items-center justify-between"><div class="flex items-center space-x-4"><img src="logo.png" width="250px" height="auto" alt="logo"/></div><div class="flex items-center space-x-4"><span id="account" class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-mono">BubbleHeaded Mashroom</span></div></div></nav><div class="connect-to-blockchain-wrapper h-dvh flex items-center justify-center"><button id="connectButton" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full flex items-center gap-3"><i class="fas fa-plug"></i> Connect to Blockchain</button></div><div class="max-w-7xl mx-auto p-6 app-root"><div class="grid grid-cols-12 gap-6"><aside class="col-span-12 md:col-span-3 lg:col-span-2 hidden"><div class="bg-white rounded-lg shadow p-4"><div class="text-sm font-semibold mb-3">Management</div><ul class="space-y-2"><li><button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white">Task Management</button></li><li><button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onclick="alert('Not Implemented Yet!'); return false;">Projects</button></li></ul><div class="text-sm font-semibold mt-4 mb-3">Admin</div><ul class="space-y-2"><li><button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onclick="alert('Not Implemented Yet!'); return false;">Users</button></li><li><button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onclick="alert('Not Implemented Yet!'); return false;">Settings</button></li></ul><div class="text-sm font-semibold mt-4 mb-3">Help</div><ul class="space-y-2"><li><button id="menu-instructions" class="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 flex items-center gap-2"><i class="fas fa-info-circle"></i> Instructions</button></li></ul></div></aside><main class="col-span-12 md:col-span-9 lg:col-span-10"><div id="loader" class="hidden text-center py-8"><div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mx-auto"></div><p class="mt-3 text-gray-600">Loading your tasks...</p></div><div id="content" class="hidden"><div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6"><div class="bg-white p-4 rounded-lg shadow"><div class="text-sm text-gray-500">Total Tasks</div><div id="totalCount" class="text-2xl font-bold">0</div></div><div class="bg-white p-4 rounded-lg shadow"><div class="text-sm text-gray-500">Active Tasks</div><div id="activeCount" class="text-2xl font-bold">0</div></div><div class="bg-white p-4 rounded-lg shadow"><div class="text-sm text-gray-500">Completed Tasks</div><div id="completedCount" class="text-2xl font-bold">0</div></div></div><div class="bg-white rounded-lg shadow p-6"><h3 class="text-lg font-semibold mb-4"><i class="fas fa-tasks mr-2"></i> Task Management</h3><form class="mb-4"><input id="newTask" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="What needs to be done?" required> <button type="submit" class="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md">Add Task</button></form><div class="text-sm font-medium text-gray-600 mb-2">Active Tasks</div><ul id="taskList" class="space-y-3 mb-6"></ul><div class="text-sm font-medium text-gray-600 mb-2">Completed Tasks</div><ul id="completedTaskList" class="space-y-3"></ul></div></div></main></div></div><div id="editTaskModal" class="modal-backdrop hidden"><div class="modal-card"><div class="mb-3"><h3 class="text-lg font-semibold">Edit Task</h3></div><div class="mb-4"><label for="editTaskInput" class="block text-sm text-gray-600 mb-1">Task Content</label> <input id="editTaskInput" class="w-full border rounded-md px-3 py-2" placeholder="Enter new task content"></div><div class="flex justify-end gap-3"><button id="editTaskModalCloseBtn" class="px-4 py-2 rounded-md border">Close</button> <button id="editTaskSaveBtn" class="px-4 py-2 rounded-md bg-indigo-600 text-white">Save</button></div></div></div><div id="instructionsModal" class="modal-backdrop hidden"><div class="modal-card max-w-4xl overflow-y-auto max-h-[90vh]"><div class="mb-4 flex justify-between items-center"><h3 class="text-2xl font-bold text-indigo-600"><i class="fas fa-info-circle mr-2"></i>How to Use BlockBoard</h3><button id="instructionsModalCloseBtn" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-xl"></i></button></div><div class="space-y-6 text-gray-700"><section><h4 class="text-lg font-semibold mb-2 text-gray-900">📋 What is BlockBoard?</h4><p>BlockBoard is a blockchain-based task management application built on Ethereum. Your tasks are stored permanently on the blockchain, making them secure and tamper-proof. Each action (adding, editing, completing, or deleting tasks) requires a small transaction fee (gas) paid in cryptocurrency.</p></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">✅ Prerequisites</h4><ul class="list-disc list-inside space-y-2 ml-4"><li><strong>MetaMask Browser Extension:</strong> Download and install MetaMask from <a href="https://metamask.io" target="_blank" class="text-indigo-600 hover:underline">metamask.io</a></li><li><strong>Sepolia Test Network:</strong> Switch MetaMask to the Sepolia test network</li><li><strong>Test ETH:</strong> Get free test ETH from a Sepolia faucet (search "Sepolia faucet" online)</li></ul><div class="mt-3 p-3 bg-gray-100 rounded-md"><p class="text-sm"><strong>Screenshot placeholder:</strong> MetaMask installation and Sepolia network setup</p></div></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">🚀 Getting Started</h4><ol class="list-decimal list-inside space-y-3 ml-4"><li><strong>Connect Your Wallet</strong><p class="ml-6 mt-1">Click the "Connect to Blockchain" button and approve the connection in MetaMask</p><div class="mt-2 ml-6 p-3 bg-gray-100 rounded-md"><p class="text-sm"><strong>Screenshot placeholder:</strong> Connect button and MetaMask approval popup</p></div></li><li><strong>Wait for Loading</strong><p class="ml-6 mt-1">The app will load your existing tasks from the blockchain. This may take a few seconds.</p></li></ol></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">📝 Managing Your Tasks</h4><div class="space-y-4"><div><h5 class="font-semibold text-gray-800">Adding a New Task</h5><ol class="list-decimal list-inside space-y-1 ml-4 mt-1"><li>Type your task in the "What needs to be done?" input field</li><li>Click the "Add Task" button</li><li>Approve the transaction in MetaMask (you'll pay a small gas fee)</li><li>Wait for the transaction to be confirmed on the blockchain</li><li>Your new task will appear in the Active Tasks list</li></ol><div class="mt-2 p-3 bg-gray-100 rounded-md"><p class="text-sm"><strong>Screenshot placeholder:</strong> Adding a task and MetaMask transaction approval</p></div></div><div><h5 class="font-semibold text-gray-800">Completing a Task</h5><ol class="list-decimal list-inside space-y-1 ml-4 mt-1"><li>Click the checkbox next to any active task</li><li>Approve the transaction in MetaMask</li><li>The task will move to the Completed Tasks section</li><li>Click the checkbox again to mark it as active</li></ol></div><div><h5 class="font-semibold text-gray-800">Editing a Task</h5><ol class="list-decimal list-inside space-y-1 ml-4 mt-1"><li>Click the <i class="fas fa-edit text-indigo-600"></i> (edit) icon next to any task</li><li>Modify the task content in the popup window</li><li>Click "Save"</li><li>Approve the transaction in MetaMask</li></ol></div><div><h5 class="font-semibold text-gray-800">Deleting a Task</h5><ol class="list-decimal list-inside space-y-1 ml-4 mt-1"><li>Click the <i class="fas fa-trash-alt text-red-600"></i> (delete) icon next to any task</li><li>Confirm the deletion in the popup dialog</li><li>Approve the transaction in MetaMask</li></ol><div class="mt-2 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded"><p class="text-sm"><strong>⚠️ Note:</strong> Deleted tasks are permanently removed from the blockchain but the transaction history remains.</p></div></div></div></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">⛽ Understanding Gas Fees</h4><p class="mb-2">Every action on the blockchain requires a transaction fee called "gas." This fee goes to miners/validators who process your transaction.</p><ul class="list-disc list-inside space-y-1 ml-4"><li>Gas fees vary based on network congestion</li><li>On Sepolia testnet, you use free test ETH</li><li>Make sure you have enough test ETH in your wallet</li><li>Transactions may take 15-30 seconds to confirm</li></ul></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">📊 Dashboard Overview</h4><p>The dashboard shows three key metrics:</p><ul class="list-disc list-inside space-y-1 ml-4 mt-2"><li><strong>Total Tasks:</strong> All tasks you've created</li><li><strong>Active Tasks:</strong> Tasks that are not yet completed</li><li><strong>Completed Tasks:</strong> Tasks you've marked as done</li></ul><div class="mt-3 p-3 bg-gray-100 rounded-md"><p class="text-sm"><strong>Screenshot placeholder:</strong> Dashboard with stats cards</p></div></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">🔧 Troubleshooting</h4><div class="space-y-3"><div><p class="font-semibold">❌ "Please connect to MetaMask" error</p><p class="ml-4 text-sm">→ Make sure MetaMask is installed and you've created/imported a wallet</p></div><div><p class="font-semibold">❌ "Transaction failed" error</p><p class="ml-4 text-sm">→ Check that you have enough test ETH for gas fees</p><p class="ml-4 text-sm">→ Try increasing the gas limit in MetaMask settings</p></div><div><p class="font-semibold">❌ "Contract not found" error</p><p class="ml-4 text-sm">→ Ensure you're connected to the Sepolia test network</p><p class="ml-4 text-sm">→ The contract must be deployed to the network you're using</p></div><div><p class="font-semibold">❌ Tasks not loading</p><p class="ml-4 text-sm">→ Refresh the page and reconnect your wallet</p><p class="ml-4 text-sm">→ Check your internet connection</p><p class="ml-4 text-sm">→ Verify you're on the correct network</p></div></div></section><section><h4 class="text-lg font-semibold mb-2 text-gray-900">🔬 Technical Details (For Developers)</h4><ul class="list-disc list-inside space-y-1 ml-4"><li><strong>Blockchain:</strong> Ethereum (Sepolia Testnet)</li><li><strong>Smart Contract:</strong> Solidity-based TodoList contract</li><li><strong>Development Tools:</strong> Truffle, Web3.js</li><li><strong>RPC Provider:</strong> Alchemy RPC endpoint</li><li><strong>Wallet:</strong> MetaMask browser extension</li></ul></section><section class="bg-indigo-50 p-4 rounded-lg"><h4 class="text-lg font-semibold mb-2 text-indigo-900">💬 Need Help?</h4><p>If you encounter any issues or have questions, please reach out to the development team or check the project's GitHub repository for more information.</p></section></div><div class="mt-6 flex justify-end"><button id="instructionsModalCloseBtn2" class="px-6 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Got it!</button></div></div></div><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"><script src="vendor/truffle-contract/dist/truffle-contract.js"></script><script src="vendor/web3/dist/web3.min.js"></script><script src="ca.js"></script><script src="app.js"></script><script defer="defer" src="./assets/js/main.ec7a9fa6.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Webermelon BlockChain Task Management</title>
+
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+	<nav class="bg-gray-900 text-white px-6 py-4">
+		<div class="max-w-7xl mx-auto flex items-center justify-between">
+			<div class="flex items-center space-x-4">
+				<img src="logo.png" width="250px" height="auto" alt="logo" />
+			</div>
+			<div class="flex items-center space-x-4">
+				<span id="account" class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-mono">BubbleHeaded Mashroom</span>
+			</div>
+		</div>
+	</nav>
+
+	<div class="connect-to-blockchain-wrapper h-dvh flex items-center justify-center">
+		<button id="connectButton" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full flex items-center gap-3">
+			<i class="fas fa-plug"></i> Connect to Blockchain
+		</button>
+	</div>
+
+	<div class="max-w-7xl mx-auto p-6 app-root">
+		<div class="grid grid-cols-12 gap-6">
+			<!-- Sidebar / single menu -->
+			<aside class="col-span-12 md:col-span-3 lg:col-span-2 hidden">
+				<div class="bg-white rounded-lg shadow p-4">
+					<div class="text-sm font-semibold mb-3">Management</div>
+					<ul class="space-y-2">
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white">Task Management</button>
+						</li>
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onClick="alert('Not Implemented Yet!'); return false;">Projects</button>
+						</li>
+					</ul>
+					
+					<div class="text-sm font-semibold mt-4 mb-3">Admin</div>
+					<ul class="space-y-2">
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onClick="alert('Not Implemented Yet!'); return false;">Users</button>
+						</li>
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onClick="alert('Not Implemented Yet!'); return false;">Settings</button>
+						</li>
+					</ul>
+					
+					<div class="text-sm font-semibold mt-4 mb-3">Help</div>
+					<ul class="space-y-2">
+						<li>
+							<button id="menu-instructions" class="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 flex items-center gap-2">
+								<i class="fas fa-info-circle"></i> Instructions
+							</button>
+						</li>
+					</ul>
+				</div>
+			</aside>
+
+			<!-- Main content -->
+			<main class="col-span-12 md:col-span-9 lg:col-span-10">
+				<div id="loader" class="hidden text-center py-8">
+					<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mx-auto"></div>
+					<p class="mt-3 text-gray-600">Loading your tasks...</p>
+				</div>
+
+				<div id="content" class="hidden">
+					<!-- Dashboard cards -->
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+						<div class="bg-white p-4 rounded-lg shadow">
+							<div class="text-sm text-gray-500">Total Tasks</div>
+							<div id="totalCount" class="text-2xl font-bold">0</div>
+						</div>
+						<div class="bg-white p-4 rounded-lg shadow">
+							<div class="text-sm text-gray-500">Active Tasks</div>
+							<div id="activeCount" class="text-2xl font-bold">0</div>
+						</div>
+						<div class="bg-white p-4 rounded-lg shadow">
+							<div class="text-sm text-gray-500">Completed Tasks</div>
+							<div id="completedCount" class="text-2xl font-bold">0</div>
+						</div>
+					</div>
+
+					<div class="bg-white rounded-lg shadow p-6">
+						<h3 class="text-lg font-semibold mb-4"><i class="fas fa-tasks mr-2"></i> Task Management</h3>
+
+						<form class="mb-4">
+							<input id="newTask" type="text" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="What needs to be done?" required>
+							<button type="submit" class="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md">Add Task</button>
+						</form>
+
+						<div class="text-sm font-medium text-gray-600 mb-2">Active Tasks</div>
+						<ul id="taskList" class="space-y-3 mb-6">
+						</ul>
+
+						<div class="text-sm font-medium text-gray-600 mb-2">Completed Tasks</div>
+						<ul id="completedTaskList" class="space-y-3">
+						</ul>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<!-- Edit Task Modal (Tailwind-style) -->
+	<div id="editTaskModal" class="modal-backdrop hidden">
+		<div class="modal-card">
+			<div class="mb-3">
+				<h3 class="text-lg font-semibold">Edit Task</h3>
+			</div>
+			<div class="mb-4">
+				<label for="editTaskInput" class="block text-sm text-gray-600 mb-1">Task Content</label>
+				<input type="text" id="editTaskInput" class="w-full border rounded-md px-3 py-2" placeholder="Enter new task content">
+			</div>
+			<div class="flex justify-end gap-3">
+				<button id="editTaskModalCloseBtn" class="px-4 py-2 rounded-md border">Close</button>
+				<button id="editTaskSaveBtn" class="px-4 py-2 rounded-md bg-indigo-600 text-white">Save</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Instructions Modal -->
+	<div id="instructionsModal" class="modal-backdrop hidden">
+		<div class="modal-card max-w-4xl overflow-y-auto max-h-[90vh]">
+			<div class="mb-4 flex justify-between items-center">
+				<h3 class="text-2xl font-bold text-indigo-600"><i class="fas fa-info-circle mr-2"></i>How to Use BlockBoard</h3>
+				<button id="instructionsModalCloseBtn" class="text-gray-500 hover:text-gray-700">
+					<i class="fas fa-times text-xl"></i>
+				</button>
+			</div>
+			
+			<div class="space-y-6 text-gray-700">
+				<!-- Introduction -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">📋 What is BlockBoard?</h4>
+					<p>BlockBoard is a blockchain-based task management application built on Ethereum. Your tasks are stored permanently on the blockchain, making them secure and tamper-proof. Each action (adding, editing, completing, or deleting tasks) requires a small transaction fee (gas) paid in cryptocurrency.</p>
+				</section>
+
+				<!-- Prerequisites -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">✅ Prerequisites</h4>
+					<ul class="list-disc list-inside space-y-2 ml-4">
+						<li><strong>MetaMask Browser Extension:</strong> Download and install MetaMask from <a href="https://metamask.io" target="_blank" class="text-indigo-600 hover:underline">metamask.io</a></li>
+						<li><strong>Sepolia Test Network:</strong> Switch MetaMask to the Sepolia test network</li>
+						<li><strong>Test ETH:</strong> Get free test ETH from a Sepolia faucet (search "Sepolia faucet" online)</li>
+					</ul>
+					<div class="mt-3 p-3 bg-gray-100 rounded-md">
+						<p class="text-sm"><strong>Screenshot placeholder:</strong> MetaMask installation and Sepolia network setup</p>
+					</div>
+				</section>
+
+				<!-- Getting Started -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">🚀 Getting Started</h4>
+					<ol class="list-decimal list-inside space-y-3 ml-4">
+						<li>
+							<strong>Connect Your Wallet</strong>
+							<p class="ml-6 mt-1">Click the "Connect to Blockchain" button and approve the connection in MetaMask</p>
+							<div class="mt-2 ml-6 p-3 bg-gray-100 rounded-md">
+								<p class="text-sm"><strong>Screenshot placeholder:</strong> Connect button and MetaMask approval popup</p>
+							</div>
+						</li>
+						<li>
+							<strong>Wait for Loading</strong>
+							<p class="ml-6 mt-1">The app will load your existing tasks from the blockchain. This may take a few seconds.</p>
+						</li>
+					</ol>
+				</section>
+
+				<!-- Using the App -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">📝 Managing Your Tasks</h4>
+					
+					<div class="space-y-4">
+						<div>
+							<h5 class="font-semibold text-gray-800">Adding a New Task</h5>
+							<ol class="list-decimal list-inside space-y-1 ml-4 mt-1">
+								<li>Type your task in the "What needs to be done?" input field</li>
+								<li>Click the "Add Task" button</li>
+								<li>Approve the transaction in MetaMask (you'll pay a small gas fee)</li>
+								<li>Wait for the transaction to be confirmed on the blockchain</li>
+								<li>Your new task will appear in the Active Tasks list</li>
+							</ol>
+							<div class="mt-2 p-3 bg-gray-100 rounded-md">
+								<p class="text-sm"><strong>Screenshot placeholder:</strong> Adding a task and MetaMask transaction approval</p>
+							</div>
+						</div>
+
+						<div>
+							<h5 class="font-semibold text-gray-800">Completing a Task</h5>
+							<ol class="list-decimal list-inside space-y-1 ml-4 mt-1">
+								<li>Click the checkbox next to any active task</li>
+								<li>Approve the transaction in MetaMask</li>
+								<li>The task will move to the Completed Tasks section</li>
+								<li>Click the checkbox again to mark it as active</li>
+							</ol>
+						</div>
+
+						<div>
+							<h5 class="font-semibold text-gray-800">Editing a Task</h5>
+							<ol class="list-decimal list-inside space-y-1 ml-4 mt-1">
+								<li>Click the <i class="fas fa-edit text-indigo-600"></i> (edit) icon next to any task</li>
+								<li>Modify the task content in the popup window</li>
+								<li>Click "Save"</li>
+								<li>Approve the transaction in MetaMask</li>
+							</ol>
+						</div>
+
+						<div>
+							<h5 class="font-semibold text-gray-800">Deleting a Task</h5>
+							<ol class="list-decimal list-inside space-y-1 ml-4 mt-1">
+								<li>Click the <i class="fas fa-trash-alt text-red-600"></i> (delete) icon next to any task</li>
+								<li>Confirm the deletion in the popup dialog</li>
+								<li>Approve the transaction in MetaMask</li>
+							</ol>
+							<div class="mt-2 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+								<p class="text-sm"><strong>⚠️ Note:</strong> Deleted tasks are permanently removed from the blockchain but the transaction history remains.</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Understanding Gas Fees -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">⛽ Understanding Gas Fees</h4>
+					<p class="mb-2">Every action on the blockchain requires a transaction fee called "gas." This fee goes to miners/validators who process your transaction.</p>
+					<ul class="list-disc list-inside space-y-1 ml-4">
+						<li>Gas fees vary based on network congestion</li>
+						<li>On Sepolia testnet, you use free test ETH</li>
+						<li>Make sure you have enough test ETH in your wallet</li>
+						<li>Transactions may take 15-30 seconds to confirm</li>
+					</ul>
+				</section>
+
+				<!-- Dashboard Overview -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">📊 Dashboard Overview</h4>
+					<p>The dashboard shows three key metrics:</p>
+					<ul class="list-disc list-inside space-y-1 ml-4 mt-2">
+						<li><strong>Total Tasks:</strong> All tasks you've created</li>
+						<li><strong>Active Tasks:</strong> Tasks that are not yet completed</li>
+						<li><strong>Completed Tasks:</strong> Tasks you've marked as done</li>
+					</ul>
+					<div class="mt-3 p-3 bg-gray-100 rounded-md">
+						<p class="text-sm"><strong>Screenshot placeholder:</strong> Dashboard with stats cards</p>
+					</div>
+				</section>
+
+				<!-- Troubleshooting -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">🔧 Troubleshooting</h4>
+					<div class="space-y-3">
+						<div>
+							<p class="font-semibold">❌ "Please connect to MetaMask" error</p>
+							<p class="ml-4 text-sm">→ Make sure MetaMask is installed and you've created/imported a wallet</p>
+						</div>
+						<div>
+							<p class="font-semibold">❌ "Transaction failed" error</p>
+							<p class="ml-4 text-sm">→ Check that you have enough test ETH for gas fees</p>
+							<p class="ml-4 text-sm">→ Try increasing the gas limit in MetaMask settings</p>
+						</div>
+						<div>
+							<p class="font-semibold">❌ "Contract not found" error</p>
+							<p class="ml-4 text-sm">→ Ensure you're connected to the Sepolia test network</p>
+							<p class="ml-4 text-sm">→ The contract must be deployed to the network you're using</p>
+						</div>
+						<div>
+							<p class="font-semibold">❌ Tasks not loading</p>
+							<p class="ml-4 text-sm">→ Refresh the page and reconnect your wallet</p>
+							<p class="ml-4 text-sm">→ Check your internet connection</p>
+							<p class="ml-4 text-sm">→ Verify you're on the correct network</p>
+						</div>
+					</div>
+				</section>
+
+				<!-- Technical Details -->
+				<section>
+					<h4 class="text-lg font-semibold mb-2 text-gray-900">🔬 Technical Details (For Developers)</h4>
+					<ul class="list-disc list-inside space-y-1 ml-4">
+						<li><strong>Blockchain:</strong> Ethereum (Sepolia Testnet)</li>
+						<li><strong>Smart Contract:</strong> Solidity-based TodoList contract</li>
+						<li><strong>Development Tools:</strong> Truffle, Web3.js</li>
+						<li><strong>RPC Provider:</strong> Alchemy RPC endpoint</li>
+						<li><strong>Wallet:</strong> MetaMask browser extension</li>
+					</ul>
+				</section>
+
+				<!-- Support -->
+				<section class="bg-indigo-50 p-4 rounded-lg">
+					<h4 class="text-lg font-semibold mb-2 text-indigo-900">💬 Need Help?</h4>
+					<p>If you encounter any issues or have questions, please reach out to the development team or check the project's GitHub repository for more information.</p>
+				</section>
+			</div>
+
+			<div class="mt-6 flex justify-end">
+				<button id="instructionsModalCloseBtn2" class="px-6 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Got it!</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- Font Awesome for icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<!-- Font/utility scripts -->
+	<script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+	<script src="vendor/web3/dist/web3.min.js"></script>
+	<script src="ca.js"></script>
+	<script src="app.js"></script>
+</body>
+
+</html>
