@@ -14,6 +14,7 @@
 //   }
 // }
 
+require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
@@ -21,15 +22,14 @@ module.exports = {
     sepolia: {
       provider: () => new HDWalletProvider({
         mnemonic: {
-          phrase: "admit blame guess below bring sell mom kingdom hold price frequent subject"
+          phrase: process.env.MNEMONIC
         }, 
-        providerOrUrl: `https://eth-sepolia.g.alchemy.com/v2/jfTO6J_tSX7mc0L9f9Ycv`,
+        providerOrUrl: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
         addressIndex: 1,
       }),
       network_id: 11155111,
       gas: 5500000,
       confirmations: 2,
-      // numberOfAddresses: 1,
       timeoutBlocks: 200,
       skipDryRun: true
     },

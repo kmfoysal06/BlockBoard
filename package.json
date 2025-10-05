@@ -7,8 +7,10 @@
         "test": "test"
     },
     "scripts": {
-        "dev": "lite-server",
-        "test": "echo \"Error: no test specified\" && sexit 1"
+           "dev": "lite-server",
+           "watch": "webpack --watch --config webpack.config.js",
+           "build": "webpack --config webpack.config.js",
+           "test": "echo \"Error: no test specified\" && sexit 1"
     },
     "author": "gregory@dappuniversity.com",
     "license": "ISC",
@@ -18,10 +20,24 @@
         "chai": "^6.2.0",
         "chai-as-promised": "^8.0.2",
         "chai-bignumber": "^3.1.0",
+        "dotenv": "^17.2.3",
         "lite-server": "^2.6.1",
         "nodemon": "^3.1.10",
         "truffle": "^5.11.5",
         "truffle-contract": "^4.0.31",
         "web3": "^4.16.0"
     }
+    ,
+    "devDependencies": {
+            "@babel/core": "^7.24.0",
+            "@babel/preset-env": "^7.24.2",
+            "babel-loader": "^9.1.4",
+            "core-js": "^3.40.0",
+            "css-loader": "^6.9.1",
+            "html-webpack-plugin": "^5.5.3",
+            "mini-css-extract-plugin": "^2.8.2",
+            "postcss-loader": "^8.2.0",
+            "webpack": "^5.88.2",
+            "webpack-cli": "^5.1.4"
+        }
 }

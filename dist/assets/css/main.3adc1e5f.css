@@ -1,0 +1,18 @@
+/* Minimal custom styles; Tailwind handles most layout */
+body { background: #f3f4f6; }
+
+.connect-to-blockchain-wrapper { display:flex; justify-content:center; margin-top:18px; }
+
+.loader { border-top-color: #6366f1!important; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Task item overrides */
+.task-item { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:8px; background:#f8fafc; }
+.task-item .content { margin-left:12px; }
+
+/* Simple modal styles */
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:50; }
+.modal-card { background:white; border-radius:8px; padding:18px; width:100%; max-width:520px; }
+
+/* Hide legacy content area by default (JS will control) */
+#content { display:none; }
