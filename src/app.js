@@ -1,11 +1,12 @@
 App = {
-	loading: false,
+	loading: true,
 	contracts: {},
 	accounts: {
 		'0x9af07f42B7504d410982319497d1ad97cEE856F8' : 'Admin',
 	},
 
 	load: async () => {
+		App.setLoading(true)
 		if(await App.loadWeb3() === false) {
 			CharmAlert.getInstance().showAlert('Please allow access to your Ethereum account.', 'error');
 			$('#connectButton').closest("div").show();
@@ -19,24 +20,34 @@ App = {
 	},
 
 	loadWeb3: async () => {
-		if (typeof web3 !== 'undefined') {
+		
+		if (window.ethereum) {
+			window.web3 = new Web3(ethereum)
+			App.web3Provider = ethereum
+			try {
+				// await ethereum.enable()
+				// ethereum.send('eth_requestAccounts')
+				await ethereum.request({ method: 'eth_requestAccounts' }).catch(() => { return false; });
+				// show content  
+				$('aside').show();
+				$('#content').show();
+				App.setLoading(false)
+			} catch (error) {
+				return false;
+			}
+		} else if (typeof web3 !== 'undefined') {
 			App.web3Provider = web3.currentProvider
 			web3 = new Web3(web3.currentProvider)
 			try {
-				await ethereum.enable()
+				await ethereum.enable().catch(() => { return false; });
+				
+				$('aside').show();
+				$('#content').show();
+				App.setLoading(false)
 			} catch (error) {
 				return false;
 			}
-		} else if (window.ethereum) {
-			window.web3 = new Web3(ethereum)
-			try {
-				await ethereum.enable()
-			} catch (error) {
-				return false;
-			}
-		} else if (window.web3) {
-			App.web3Provider = web3.currentProvider
-			window.web3 = new Web3(web3.currentProvider)
+
 		} else {
 			CharmAlert.getInstance().showAlert('Non-Ethereum browser detected. You should consider trying MetaMask!', 'error');
 		}
@@ -51,61 +62,92 @@ App = {
 		const todoList = await $.getJSON('TodoList.json')
 		App.contracts.TodoList = TruffleContract(todoList)
 		App.contracts.TodoList.setProvider(App.web3Provider)
-		App.todoList = await App.contracts.TodoList.deployed({ gas: 3000000 });
+		try {
+			App.todoList = await App.contracts.TodoList.deployed();
+			App.setLoading(false)
+			console.log('TodoList deployed at', App.todoList.address);
+		} catch (err) {
+			CharmAlert.getInstance().showAlert('TodoList contract not found on the connected network. Please switch network to the one you deployed to.', 'error');
+			console.error('Contract deployment lookup failed:', err);
+			throw err;
+		}
 	},
 
 	render: async () => {
 		if (App.loading) return
-		App.setLoading(true)
 
-		// $('#account').html(App.account)
 		const accountName = App.accounts[App.account] ? App.accounts[App.account] : "AutomaticRaspberry";
 		$('#account').html(accountName)
 
 		await App.renderTasks()
 		CharmAlert.getInstance().showAlert('Connected to blockchain successfully!', 'success');
+
 		App.setLoading(false)
 	},
 
 	renderTasks: async () => {
-		const taskCount = await App.todoList.todoCount();
-		const $taskList = $('#taskList');
-		const $completedTaskList = $('#completedTaskList');
+		// use explicit .call() for view methods to ensure eth_call
+		try {
+			const taskCountRaw = await App.todoList.todoCount.call({
+				gas: 300000
+			});
+			const taskCount = (taskCountRaw.toNumber) ? taskCountRaw.toNumber() : Number(taskCountRaw);
+			const $taskList = $('#taskList');
+			const $completedTaskList = $('#completedTaskList');
 
-		$('#newTask').val('');
-		$taskList.html('');
-		$completedTaskList.html('');
+			$('#newTask').val('');
+			$taskList.html('');
+			$completedTaskList.html('');
 
-		for (var i = 1; i <= taskCount; i++) {
-			const task = await App.todoList.tasks(i);
-			const taskId = task[0].toNumber();
-			const taskContent = task[1];
-			const taskCompleted = task[2];
+			let total = 0, active = 0, completed = 0;
 
-			if(taskContent.length === 0) {
-				continue;
+			for (var i = 1; i <= taskCount; i++) {
+				const task = await App.todoList.tasks.call(i);
+				const taskId = task[0].toNumber();
+				const taskContent = task[1];
+				const taskCompleted = task[2];
+
+				if(!taskContent || taskContent.length === 0) continue;
+
+				total++;
+				if (taskCompleted) completed++; else active++;
+
+				const $newTaskTemplate = $(
+					`<li class="task-item" data-id="${taskId}">
+						<label class="flex items-center w-full">
+							<input type="checkbox" name="${taskId}" ${taskCompleted ? 'checked' : ''} />
+							<span class="content">${taskContent}</span>
+						</label>
+						<div class="task-actions flex items-center gap-2">
+							<button class="edit-btn text-indigo-600" data-id="${taskId}"><i class="fas fa-edit"></i></button>
+							<button class="delete-btn text-red-600" data-id="${taskId}"><i class="fas fa-trash-alt"></i></button>
+						</div>
+					</li>`
+				);
+
+				if (taskCompleted) {
+					$completedTaskList.append($newTaskTemplate);
+				} else {
+					$taskList.append($newTaskTemplate);
+				}
 			}
 
-			const $newTaskTemplate = $(`
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<label>
-						<input type="checkbox" name="${taskId}" ${taskCompleted ? 'checked' : ''}/>
-						<span class="content">${taskContent}</span>
-					</label>
-					<div class="task-actions">
-						<button class="btn btn-sm btn-primary edit-btn" data-id="${taskId}"><i class="fas fa-edit"></i></button>
-						<button class="btn btn-sm btn-danger delete-btn" data-id="${taskId}"><i class="fas fa-trash-alt"></i></button>
-					</div>
-				</li>
-			`);
-
-			if (taskCompleted) {
-				$completedTaskList.append($newTaskTemplate);
-			} else {
-				$taskList.append($newTaskTemplate);
-			}
-
-			$newTaskTemplate.show();
+			// update counters on dashboard
+			$('#totalCount').text(total);
+			$('#activeCount').text(active);
+			$('#completedCount').text(completed);
+		}catch (err) {
+			CharmAlert.getInstance().showAlert('Error loading tasks from blockchain. Maybe you are out of gas!', 'error');
+			// loading false just show error in main 
+			App.setLoading(false);
+			document.querySelector(".app-root").innerHTML = `
+				<div class="text-center text-red-600 h-svh flex flex-col justify-center items-center">
+					<p class="text-lg font-semibold">Error loading tasks from blockchain.</p>
+					<p class="mt-2">Maybe you are out of gas!</p>
+				</div>
+			`;
+			console.error('Error loading tasks:', err);
+			return;
 		}
 	},
 
@@ -156,34 +198,45 @@ App = {
 
 // Event delegation
 $(() => {
-	const $wrapper = $('.todo-list-contents-wrapper');
+	const $wrapper = $('#content');
 	const $taskListWrapper = $('#taskList, #completedTaskList');
 
 	$(window).on('load', async () => {
 		
 		const connectBtn = $('#connectButton');
+		// hide loader 
+		$('#loader').hide();
 		connectBtn.on('click', async () => {
 			connectBtn.closest("div").hide();
 			await App.load();
-			window.location.reload();
-			$wrapper.show();
+			// window.location.reload();
+			connectBtn.closest("div").hide();
+			// $wrapper.show();
 		});
 
 		if(window?.ethereum) {
-			const accounts = await ethereum.request({ method: 'eth_accounts' })
-			App.loading = true;
+			const accounts = await ethereum.request({ method: 'eth_accounts' });
+			// App.loading = true;
+			// App.setLoading(true);
+			// hide loader 
+			$('#loader').hide();
+			// hide connect button if already connected
+
 			if(accounts.length === 0) {
+				$('aside').hide();
 				connectBtn.closest("div").show();
 				$wrapper.hide();
-				$('#loader').hide();
 				CharmAlert.getInstance().showAlert('Please connect to MetaMask.', 'error');
 				return;
 			}else{
 				connectBtn.closest("div").hide();
+				// show aside menu 
 				App.load();
+				$('aside').show();
 				$wrapper.show();
 			}
-			App.loading = false;
+			// App.loading = false;
+			App.setLoading(false);
 		}
 	});
 
@@ -205,25 +258,25 @@ $(() => {
 	// Edit button click
 	$taskListWrapper.on('click', '.edit-btn', (e) => {
 		const taskId = $(e.currentTarget).data('id');
-		// const newValue = prompt('Enter new value for task:', $(e.currentTarget).closest('li').find('.content').text());
-		// if (newValue !== null) {
-		// 	App.updateTask(taskId, newValue);
-		// 	console.log(`Task ${taskId} saved with new value: ${newValue}`);
-		// 	// Here you would call smart contract update function if needed
-		// }
 		$('#editTaskSaveBtn').data('id', taskId);
 		$('#editTaskInput').val($(e.currentTarget).closest('li').find('.content').text());
-		$('#editTaskModal').modal('show');
+		$('#editTaskModal').removeClass('hidden');
 	});
 
-	$(document).on('click', '.editTaskSaveBtn', (e) => {
+	// Save edited task
+	$(document).on('click', '#editTaskSaveBtn', (e) => {
 		const taskId = $(e.currentTarget).data('id');
 		const newValue = $('#editTaskInput').val();
-		if (newValue !== null) {
+		if (newValue !== null && newValue.length > 0) {
 			App.updateTask(taskId, newValue);
 			console.log(`Task ${taskId} saved with new value: ${newValue}`);
 		}
-		$('#editTaskModal').modal('hide');
+		$('#editTaskModal').addClass('hidden');
+	});
+
+	// Close modal
+	$(document).on('click', '#editTaskModalCloseBtn', (e) => {
+		$('#editTaskModal').addClass('hidden');
 	});
 
 	// Delete button click
@@ -232,7 +285,6 @@ $(() => {
 		if (confirm('Are you sure you want to delete this task?')) {
 			App.deleteTask(taskId);
 			console.log(`Task ${taskId} deleted`);
-			// Here you would call smart contract delete function if needed
 		}
 
 	});

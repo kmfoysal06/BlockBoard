@@ -7,98 +7,114 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Webermelon BlockChain Task Management</title>
 
-	<!-- Bootstrap -->
-	<link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
-	<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
 	<link href="style.css" rel="stylesheet">
 </head>
 
 <body>
-	<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-		<a class="navbar-brand col-sm-3 col-md-2 mr-0 px-4" href="http://www.dappuniversity.com/free-download"
-			target="_blank">
-			Webermelon BlockChain Task Management
-		</a>
-		<ul class="navbar-nav px-3">
-			<li class="nav-item text-nowrap d-none d-sm-block">
-				<small class="nav-link"><span id="account" class="badge badge-light"></span></small>
-			</li>
-		</ul>
+	<nav class="bg-gray-900 text-white px-6 py-4">
+		<div class="max-w-7xl mx-auto flex items-center justify-between">
+			<div class="flex items-center space-x-4">
+				<img src="logo.png" width="250px" height="auto" alt="logo" />
+			</div>
+			<div class="flex items-center space-x-4">
+				<span id="account" class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-mono">BubbleHeaded Mashroom</span>
+			</div>
+		</div>
 	</nav>
 
-	<div class="container-fluid mt-5">
-		<div class="row">
-			<main role="main" class="col-lg-12 d-flex flex-column align-items-center">
-				<div class="connect-to-blockchain-wrapper">
-					<button id="connectButton" class="btn btn-primary btn-lg">
-						<i class="fas fa-plug"></i> Connect to Blockchain
-					</button>
+	<div class="connect-to-blockchain-wrapper h-dvh flex items-center justify-center">
+		<button id="connectButton" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-full flex items-center gap-3">
+			<i class="fas fa-plug"></i> Connect to Blockchain
+		</button>
+	</div>
+
+	<div class="max-w-7xl mx-auto p-6 app-root">
+		<div class="grid grid-cols-12 gap-6">
+			<!-- Sidebar / single menu -->
+			<aside class="col-span-12 md:col-span-3 lg:col-span-2 hidden">
+				<div class="bg-white rounded-lg shadow p-4">
+					<div class="text-sm font-semibold mb-3">Management</div>
+					<ul class="space-y-2">
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white">Task Management</button>
+						</li>
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onClick="alert('Not Implemented Yet!'); return false;">Projects</button>
+						</li>
+					</ul>
+					
+					<div class="text-sm font-semibold mt-4 mb-3">Admin</div>
+					<ul class="space-y-2">
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onClick="alert('Not Implemented Yet!'); return false;">Users</button>
+						</li>
+						<li>
+							<button id="menu-tasks" class="w-full text-left px-3 py-2 rounded-md bg-black text-white" onClick="alert('Not Implemented Yet!'); return false;">Settings</button>
+						</li>
+					</ul>
+				</div>
+			</aside>
+
+			<!-- Main content -->
+			<main class="col-span-12 md:col-span-9 lg:col-span-10">
+				<div id="loader" class="hidden text-center py-8">
+					<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mx-auto"></div>
+					<p class="mt-3 text-gray-600">Loading your tasks...</p>
 				</div>
 
-				<div class="todo-list-contents-wrapper mt-5">
-					<div id="loader" class="text-center">
-						<div class="spinner-border text-primary" role="status">
-							<span class="sr-only">Loading...</span>
+				<div id="content" class="hidden">
+					<!-- Dashboard cards -->
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+						<div class="bg-white p-4 rounded-lg shadow">
+							<div class="text-sm text-gray-500">Total Tasks</div>
+							<div id="totalCount" class="text-2xl font-bold">0</div>
 						</div>
-						<p class="mt-3 text-white">Loading your tasks...</p>
+						<div class="bg-white p-4 rounded-lg shadow">
+							<div class="text-sm text-gray-500">Active Tasks</div>
+							<div id="activeCount" class="text-2xl font-bold">0</div>
+						</div>
+						<div class="bg-white p-4 rounded-lg shadow">
+							<div class="text-sm text-gray-500">Completed Tasks</div>
+							<div id="completedCount" class="text-2xl font-bold">0</div>
+						</div>
 					</div>
 
-					<div id="content">
-						<div class="card">
-							<div class="card-header">
-								<h3 class="mb-0"><i class="fas fa-tasks"></i> Task Management</h3>
-							</div>
-							<div class="card-body">
-								<form>
-									<div class="form-group">
-										<input id="newTask" type="text" class="form-control form-control-lg"
-											placeholder="What needs to be done?" required>
-									</div>
-									<button type="submit" class="btn btn-primary btn-submit">
-										Add Task
-									</button>
-								</form>
+					<div class="bg-white rounded-lg shadow p-6">
+						<h3 class="text-lg font-semibold mb-4"><i class="fas fa-tasks mr-2"></i> Task Management</h3>
 
-								<div class="section-title">
-									Active Tasks
-								</div>
-								<ul id="taskList" class="list-group">
+						<form class="mb-4">
+							<input id="newTask" type="text" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="What needs to be done?" required>
+							<button type="submit" class="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md">Add Task</button>
+						</form>
 
-								</ul>
+						<div class="text-sm font-medium text-gray-600 mb-2">Active Tasks</div>
+						<ul id="taskList" class="space-y-3 mb-6">
+						</ul>
 
-								<div class="section-title">Completed Tasks</div>
-								<ul id="completedTaskList" class="list-group">
-								</ul>
-							</div>
-						</div>
+						<div class="text-sm font-medium text-gray-600 mb-2">Completed Tasks</div>
+						<ul id="completedTaskList" class="space-y-3">
+						</ul>
 					</div>
 				</div>
 			</main>
 		</div>
 	</div>
 
-	<!-- bootstrap modal -->
-	<div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editLabel"
-		aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="editLabel">Edit Task</h5>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="editTaskInput">Task Content</label>
-						<input type="text" class="form-control" id="editTaskInput" placeholder="Enter new task content">
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="editTaskSaveBtn" class="btn btn-primary editTaskSaveBtn">Save</button>
-					<button type="button" id="editTaskModalCloseBtn" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
+	<!-- Edit Task Modal (Tailwind-style) -->
+	<div id="editTaskModal" class="modal-backdrop hidden">
+		<div class="modal-card">
+			<div class="mb-3">
+				<h3 class="text-lg font-semibold">Edit Task</h3>
+			</div>
+			<div class="mb-4">
+				<label for="editTaskInput" class="block text-sm text-gray-600 mb-1">Task Content</label>
+				<input type="text" id="editTaskInput" class="w-full border rounded-md px-3 py-2" placeholder="Enter new task content">
+			</div>
+			<div class="flex justify-end gap-3">
+				<button id="editTaskModalCloseBtn" class="px-4 py-2 rounded-md border">Close</button>
+				<button id="editTaskSaveBtn" class="px-4 py-2 rounded-md bg-indigo-600 text-white">Save</button>
 			</div>
 		</div>
 	</div>
@@ -107,8 +123,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Font Awesome for icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!-- Font/utility scripts -->
 	<script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
 	<script src="vendor/web3/dist/web3.min.js"></script>
 	<script src="ca.js"></script>

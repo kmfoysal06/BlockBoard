@@ -12,7 +12,21 @@ class CharmAlert {
         const alertBox = document.createElement('div');
         alertBox.className = `charm-alert charm-alert-${type}`;
         alertBox.style.position = 'fixed';
-        alertBox.style.top = '50px';
+        // Calculate stacked top position: find existing alerts and place new one below them
+        const existingAlerts = Array.from(document.querySelectorAll('.charm-alert'));
+        const gap = 10; // px gap between alerts
+        let topOffset = 50; // base top offset
+        if (existingAlerts.length > 0) {
+            // compute the bottom-most point among existing alerts
+            const bottoms = existingAlerts.map(a => {
+                const rect = a.getBoundingClientRect();
+                return rect.top + rect.height;
+            });
+            const maxBottom = Math.max(...bottoms);
+            // if maxBottom is greater than base offset, start after it plus gap
+            topOffset = Math.max(topOffset, Math.ceil(maxBottom + gap));
+        }
+        alertBox.style.top = topOffset + 'px';
         // zindex 
         alertBox.style.zIndex = '1111';
         
@@ -33,23 +47,36 @@ class CharmAlert {
 
         alertBox.innerText = message;
         // pause timeout on hover and resume on mouse leave
-        alertBox.addEventListener('mouseenter', () => {
-            if(typeof(this.timeout) !== 'undefined') {
-                clearTimeout(this.timeout);
-            }
-        });
-        alertBox.addEventListener('mouseleave', () => {
-            this.timeout = setTimeout(() => {
-                alertBox.remove();
-            }, 3000);
-        });
-
         // Append the alert box to the body
         document.body.appendChild(alertBox);
 
-        // Automatically remove the alert after 3 seconds
-        this.timeout = setTimeout(() => {
+        // Use a per-alert timeout so multiple alerts don't clash
+        let alertTimeout = null;
+        const startAutoRemove = () => {
+            alertTimeout = setTimeout(() => {
+                alertBox.remove();
+            }, 3000);
+        };
+
+        // pause timeout on hover and resume on mouse leave
+        alertBox.addEventListener('mouseenter', () => {
+            if (alertTimeout) {
+                clearTimeout(alertTimeout);
+                alertTimeout = null;
+            }
+        });
+        alertBox.addEventListener('mouseleave', () => {
+            // restart timer
+            if (!alertTimeout) startAutoRemove();
+        });
+
+        // clicking removes immediately
+        alertBox.addEventListener('click', () => {
+            if (alertTimeout) clearTimeout(alertTimeout);
             alertBox.remove();
-        }, 3000);
+        });
+
+        // start the auto removal timer
+        startAutoRemove();
     }
 }
