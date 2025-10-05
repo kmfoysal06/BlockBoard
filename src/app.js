@@ -40,7 +40,7 @@ App = {
 			web3 = new Web3(web3.currentProvider)
 			try {
 				await ethereum.enable().catch(() => { return false; });
-				
+
 				$('aside').show();
 				$('#content').show();
 				App.setLoading(false)
@@ -62,6 +62,8 @@ App = {
 		const todoList = await $.getJSON('TodoList.json')
 		App.contracts.TodoList = TruffleContract(todoList)
 		App.contracts.TodoList.setProvider(App.web3Provider)
+		// App.todoList = 
+		// App.todoList = await App.contracts.TodoList.at(deployedAddress);
 		try {
 			App.todoList = await App.contracts.TodoList.deployed();
 			App.setLoading(false)
