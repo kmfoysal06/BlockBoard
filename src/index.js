@@ -1,6 +1,6 @@
-import './src/style.css';
-import './src/ca.js';
-import './src/app.js';
+import './style.css';
+import './ca.js';
+import './app.js';
 
 // Import logo so webpack emits it and updates references in HTML via html-loader
 import logo from './logo.png';
