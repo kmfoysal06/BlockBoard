@@ -281,6 +281,22 @@ $(() => {
 		$('#editTaskModal').addClass('hidden');
 	});
 
+	// Instructions modal handlers
+	$(document).on('click', '#menu-instructions', (e) => {
+		$('#instructionsModal').removeClass('hidden');
+	});
+
+	$(document).on('click', '#instructionsModalCloseBtn, #instructionsModalCloseBtn2', (e) => {
+		$('#instructionsModal').addClass('hidden');
+	});
+
+	// Close instructions modal when clicking outside
+	$(document).on('click', '#instructionsModal', (e) => {
+		if (e.target.id === 'instructionsModal') {
+			$('#instructionsModal').addClass('hidden');
+		}
+	});
+
 	// Delete button click
 	$taskListWrapper.on('click', '.delete-btn', (e) => {
 		const taskId = $(e.currentTarget).data('id');
